@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNGDC Diplomatic Speeches Explorer</title>
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --panel-color: #16213e;
+            --surface-color: #0f3460;
+            --accent-color: #e94560;
+            --text-color: #e0e0e0;
+            --muted-color: #8899aa;
+            --border-color: #2a3a5c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background-color: var(--panel-color);
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .main-content {
+            background-color: var(--panel-color);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        h1, h2, h3 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--muted-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--surface-color);
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .document-list {
+            margin-top: 20px;
+        }
+
+        .document-item {
+            background-color: var(--surface-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .document-item:hover {
+            background-color: #1a3a6f;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .document-id {
+            font-family: monospace;
+            color: var(--muted-color);
+            font-size: 0.9em;
+        }
+
+        .document-meta {
+            font-size: 0.9em;
+            color: var(--muted-color);
+            margin-top: 5px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            width: auto;
+        }
+
+        .stats-section {
+            background-color: var(--surface-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .stat-item {
+            background-color: var(--panel-color);
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--muted-color);
+            margin-top: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--muted-color);
+        }
+
+        .document-detail {
+            background-color: var(--surface-color);
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .document-text {
+            white-space: pre-wrap;
+            background-color: var(--panel-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .back-button {
+            background-color: var(--border-color);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Filters</h2>
+            <div class="filter-section">
+                <label for="country-search">Country:</label>
+                <input type="text" id="country-search" placeholder="Search for a country...">
+                <div id="country-suggestions" style="display:none; border:1px solid var(--border-color); max-height:150px; overflow-y:auto; background:var(--surface-color); margin-top:5px;">
+                    <div style="padding:8px; cursor:pointer;" class="country-suggestion" data-iso="">Loading countries...</div>
+                </div>
+                <div id="selected-countries" style="margin-top:8px; min-height:20px;"></div>
+                <small>Start typing to search and select countries</small>
+            </div>
+            <div class="filter-section">
+                <label for="year-range-filter">Year Range:</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="number" id="year-start-filter" placeholder="Start year" style="flex: 1;">
+                    <span style="display: flex; align-items: center;">to</span>
+                    <input type="number" id="year-end-filter" placeholder="End year" style="flex: 1;">
+                </div>
+            </div>
+            <div class="filter-section">
+                <label for="session-filter">Session:</label>
+                <input type="number" id="session-filter" placeholder="e.g. 1">
+            </div>
+            <div class="filter-section">
+                <label for="region-filter">UN Region:</label>
+                <input type="text" id="region-filter" placeholder="e.g. GRULAC">
+            </div>
+            <button id="apply-filters">Apply Filters</button>
+            <button id="reset-filters" style="background-color: var(--border-color);">Reset Filters</button>
+        </div>
+        <div class="main-content">
+            <h1>UNGDC Diplomatic Speeches</h1>
+            
+            <div class="stats-section" id="stats-section">
+                <h3>Database Stats</h3>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="loading">Loading stats...</div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="search-input" placeholder="Search in text...">
+                <button id="search-button">Search</button>
+            </div>
+            
+            <div id="document-list" class="document-list">
+                <div class="loading">Loading documents...</div>
+            </div>
+            
+            <div class="pagination">
+                <button id="prev-page">Previous</button>
+                <span id="page-info">Page 1</span>
+                <button id="next-page">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentQuery = null;
+        let currentFilters = {};
+        let allCountries = [];
+        let selectedCountries = new Set();
+
+        // DOM elements
+        const documentList = document.getElementById('document-list');
+        const pageInfo = document.getElementById('page-info');
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-button');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const resetFiltersBtn = document.getElementById('reset-filters');
+        const statsGrid = document.getElementById('stats-grid');
+        const countrySearch = document.getElementById('country-search');
+        const countrySuggestions = document.getElementById('country-suggestions');
+        const selectedCountriesContainer = document.getElementById('selected-countries');
+
+        // Load countries for autocomplete
+        async function loadCountries() {
+            try {
+                const response = await fetch('http://localhost:8000/countries');
+                const countries = await response.json();
+                
+                // Store countries alphabetically by ISO code
+                allCountries = countries.map(c => c.iso).sort();
+                
+                // Show loading complete
+                countrySuggestions.innerHTML = '';
+                if (allCountries.length === 0) {
+                    countrySuggestions.innerHTML = '<div style="padding:8px;">No countries found</div>';
+                }
+            } catch (error) {
+                console.error('Error loading countries:', error);
+                countrySuggestions.innerHTML = '<div style="padding:8px;">Error loading countries</div>';
+            }
+        }
+
+        // Show country suggestions based on search input
+        function showCountrySuggestions(searchTerm) {
+            const filtered = allCountries.filter(country => 
+                country.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            countrySuggestions.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                countrySuggestions.innerHTML = '<div style="padding:8px;">No countries found</div>';
+            } else {
+                filtered.forEach(country => {
+                    if (!selectedCountries.has(country)) {
+                        const div = document.createElement('div');
+                        div.className = 'country-suggestion';
+                        div.textContent = country;
+                        div.dataset.iso = country;
+                        div.style.padding = '8px';
+                        div.style.cursor = 'pointer';
+                        div.addEventListener('click', () => selectCountry(country));
+                        countrySuggestions.appendChild(div);
+                    }
+                });
+            }
+            
+            countrySuggestions.style.display = filtered.length > 0 ? 'block' : 'none';
+        }
+
+        // Select a country from suggestions
+        function selectCountry(countryIso) {
+            if (!selectedCountries.has(countryIso)) {
+                selectedCountries.add(countryIso);
+                updateSelectedCountriesDisplay();
+                countrySearch.value = '';
+                countrySuggestions.style.display = 'none';
+            }
+        }
+
+        // Remove a selected country
+        function removeCountry(countryIso) {
+            selectedCountries.delete(countryIso);
+            updateSelectedCountriesDisplay();
+        }
+
+        // Update the display of selected countries
+        function updateSelectedCountriesDisplay() {
+            selectedCountriesContainer.innerHTML = '';
+            
+            if (selectedCountries.size === 0) {
+                selectedCountriesContainer.innerHTML = '<small style="color: var(--muted-color)">No countries selected</small>';
+            } else {
+                selectedCountries.forEach(country => {
+                    const chip = document.createElement('span');
+                    chip.style.display = 'inline-block';
+                    chip.style.backgroundColor = 'var(--accent-color)';
+                    chip.style.color = 'white';
+                    chip.style.padding = '4px 8px';
+                    chip.style.borderRadius = '4px';
+                    chip.style.margin = '2px';
+                    chip.style.fontSize = '0.9em';
+                    
+                    chip.textContent = country;
+                    
+                    const removeBtn = document.createElement('span');
+                    removeBtn.textContent = ' ×';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.marginLeft = '4px';
+                    removeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        removeCountry(country);
+                    };
+                    
+                    chip.appendChild(removeBtn);
+                    selectedCountriesContainer.appendChild(chip);
+                });
+            }
+        }
+
+        // Initialize
+        async function init() {
+            await Promise.all([
+                loadStats(),
+                loadCountries()
+            ]);
+            await loadDocuments();
+        }
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('http://localhost:8000/stats');
+                const stats = await response.json();
+                
+                statsGrid.innerHTML = `
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.total_documents}</div>
+                        <div class="stat-label">Total Documents</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.distinct_countries}</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.distinct_years}</div>
+                        <div class="stat-label">Years</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.distinct_sessions}</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.distinct_regions}</div>
+                        <div class="stat-label">Regions</div>
+                    </div>
+                `;
+            } catch (error) {
+                statsGrid.innerHTML = `<div class="loading">Error loading stats</div>`;
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load documents
+        async function loadDocuments() {
+            try {
+                documentList.innerHTML = '<div class="loading">Loading documents...</div>';
+                
+                let url = `http://localhost:8000/documents?page=${currentPage}&per_page=50`;
+                
+                // Add filters if any
+                if (currentFilters.iso) url += `&iso=${currentFilters.iso}`;
+                if (currentFilters.year) url += `&year=${currentFilters.year}`;
+                if (currentFilters.year_range) url += `&year_range=${currentFilters.year_range}`;
+                if (currentFilters.session) url += `&session=${currentFilters.session}`;
+                if (currentFilters.un_region) url += `&un_region=${currentFilters.un_region}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                totalPages = Math.ceil(data.total / data.per_page);
+                updatePagination();
+                
+                if (data.documents.length === 0) {
+                    documentList.innerHTML = '<div class="loading">No documents found</div>';
+                    return;
+                }
+                
+                documentList.innerHTML = data.documents.map(doc => `
+                    <div class="document-item" data-doc-id="${doc.doc_id}">
+                        <div class="document-header">
+                            <span class="document-id">${doc.doc_id}</span>
+                            <span>${doc.iso} - ${doc.year}</span>
+                        </div>
+                        <div class="document-meta">
+                            Session: ${doc.session} | Region: ${doc.un_region} | Text length: ${doc.text_length} chars
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add click handlers
+                document.querySelectorAll('.document-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const docId = item.getAttribute('data-doc-id');
+                        showDocumentDetail(docId);
+                    });
+                });
+                
+            } catch (error) {
+                documentList.innerHTML = '<div class="loading">Error loading documents</div>';
+                console.error('Error loading documents:', error);
+            }
+        }
+
+        // Show document detail
+        async function showDocumentDetail(docId) {
+            try {
+                const response = await fetch(`http://localhost:8000/documents/${docId}`);
+                const doc = await response.json();
+                
+                documentList.innerHTML = `
+                    <div class="document-detail">
+                        <button class="back-button" id="back-button">← Back to List</button>
+                        <h2>${doc.doc_id}</h2>
+                        <div class="document-meta">
+                            <strong>Country:</strong> ${doc.iso} | 
+                            <strong>Year:</strong> ${doc.year} | 
+                            <strong>Session:</strong> ${doc.session} | 
+                            <strong>Region:</strong> ${doc.un_region}
+                        </div>
+                        <h3>Speech Text</h3>
+                        <div class="document-text">${doc.text}</div>
+                    </div>
+                `;
+                
+                document.getElementById('back-button').addEventListener('click', () => {
+                    loadDocuments();
+                });
+                
+            } catch (error) {
+                documentList.innerHTML = '<div class="loading">Error loading document details</div>';
+                console.error('Error loading document details:', error);
+            }
+        }
+
+        // Search documents
+        async function searchDocuments() {
+            const query = searchInput.value.trim();
+            if (query.length < 3) {
+                alert('Please enter at least 3 characters for search');
+                return;
+            }
+            
+            currentQuery = query;
+            currentPage = 1;
+            
+            try {
+                documentList.innerHTML = '<div class="loading">Searching...</div>';
+                
+                const response = await fetch(`http://localhost:8000/search?q=${encodeURIComponent(query)}&page=1&per_page=50`);
+                const data = await response.json();
+                
+                totalPages = Math.ceil(data.total / data.per_page);
+                updatePagination();
+                
+                if (data.documents.length === 0) {
+                    documentList.innerHTML = '<div class="loading">No results found</div>';
+                    return;
+                }
+                
+                documentList.innerHTML = `
+                    <div class="search-results-header">
+                        <h3>Search Results for "${query}"</h3>
+                        <p>${data.total} results found</p>
+                    </div>
+                ` + data.documents.map(doc => `
+                    <div class="document-item" data-doc-id="${doc.doc_id}">
+                        <div class="document-header">
+                            <span class="document-id">${doc.doc_id}</span>
+                            <span>${doc.iso} - ${doc.year}</span>
+                        </div>
+                        <div class="document-meta">
+                            Session: ${doc.session} | Region: ${doc.un_region} | Text length: ${doc.text_length} chars
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add click handlers
+                document.querySelectorAll('.document-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const docId = item.getAttribute('data-doc-id');
+                        showDocumentDetail(docId);
+                    });
+                });
+                
+            } catch (error) {
+                documentList.innerHTML = '<div class="loading">Error searching documents</div>';
+                console.error('Error searching documents:', error);
+            }
+        }
+
+        // Update pagination controls
+        function updatePagination() {
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        // Event listeners
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                if (currentQuery) {
+                    searchDocuments();
+                } else {
+                    loadDocuments();
+                }
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                if (currentQuery) {
+                    searchDocuments();
+                } else {
+                    loadDocuments();
+                }
+            }
+        });
+
+        searchBtn.addEventListener('click', searchDocuments);
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchDocuments();
+            }
+        });
+
+        // Country search autocomplete
+        countrySearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim();
+            if (searchTerm.length > 0) {
+                showCountrySuggestions(searchTerm);
+            } else {
+                countrySuggestions.style.display = 'none';
+            }
+        });
+
+        countrySearch.addEventListener('focus', () => {
+            if (countrySearch.value.trim().length > 0) {
+                showCountrySuggestions(countrySearch.value.trim());
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target !== countrySearch && !countrySuggestions.contains(e.target)) {
+                countrySuggestions.style.display = 'none';
+            }
+        });
+
+        applyFiltersBtn.addEventListener('click', () => {
+            // Handle year range
+            const startYear = document.getElementById('year-start-filter').value;
+            const endYear = document.getElementById('year-end-filter').value;
+            
+            let yearFilter = null;
+            let yearRangeFilter = null;
+            
+            if (startYear && endYear) {
+                const start = parseInt(startYear);
+                const end = parseInt(endYear);
+                if (start > end) {
+                    alert('Start year must be less than or equal to end year');
+                    return;
+                }
+                yearRangeFilter = `${start}-${end}`;
+            } else if (startYear) {
+                yearFilter = parseInt(startYear);
+            } else if (endYear) {
+                yearFilter = parseInt(endYear);
+            }
+            
+            currentFilters = {
+                iso: selectedCountries.size > 0 ? Array.from(selectedCountries).join(';') : null,
+                year: yearFilter,
+                year_range: yearRangeFilter,
+                session: document.getElementById('session-filter').value || null,
+                un_region: document.getElementById('region-filter').value.trim() || null,
+            };
+            currentPage = 1;
+            currentQuery = null;
+            loadDocuments();
+        });
+
+        resetFiltersBtn.addEventListener('click', () => {
+            // Reset selected countries
+            selectedCountries.clear();
+            updateSelectedCountriesDisplay();
+            
+            // Reset year range filters
+            document.getElementById('year-start-filter').value = '';
+            document.getElementById('year-end-filter').value = '';
+            document.getElementById('session-filter').value = '';
+            document.getElementById('region-filter').value = '';
+            currentFilters = {};
+            currentPage = 1;
+            currentQuery = null;
+            loadDocuments();
+        });
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+year_start: 1965
+year_end: 1975
+smoke_test_year: 1973   # build and review the pipeline on this year alone before sweeping the rest
+
+batch_size: 5            # speeches per inductive-coding "lot" (nam_discourse_plan.md S4)
+controls_per_nam_speech: 1
+
+models:
+  # temp 0.2, not 0: two temp-0 RA1 instances would just clone each other, defeating the
+  # point of the inter-coder reliability check (S6) -- a little sampling diversity is needed
+  # for disagreement to actually surface where the typology is under-specified.
+  inductive: { model: command-a-03-2025, temperature: 0.2 }
+  boundary:  { model: command-a-03-2025, temperature: 0.0 }
+  skeptic:   { model: command-a-reasoning-08-2025, temperature: 0.3 }
+  coordinator: { model: command-a-reasoning-08-2025, temperature: 0.3 }
+  diachronic: { model: command-a-03-2025, temperature: 0.3 }
+
+thresholds:
+  reliability_escalate_below: 0.6      # Tier 2: inter-RA1 agreement below this -> question
+  characteristic_min_states: 3         # Tier 2: fewer distinct states behind a code -> question
+  retire_merge_annotation_guard: 5     # Tier 3: retiring/merging a code with more annotations than this -> question
+  null_result_batches: 6               # Tier 3: this many consecutive batches with no 'characteristic' code -> question
+  churn_freeze_threshold: 2            # convergence: codes added/changed/retired per batch below this...
+  churn_freeze_consecutive_batches: 3  # ...for this many consecutive batches -> eligible to freeze
+
+paths:
+  speeches: data/speeches_1965_1975.jsonl
+  membership: data/nam_membership.json
+  country_metadata: data/country_metadata.json
+  substrate_dir: substrate

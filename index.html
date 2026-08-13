@@ -9,10 +9,19 @@
   * { box-sizing:border-box; }
   body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
          background:var(--bg); color:var(--ink); line-height:1.45; }
-  header { padding:22px 28px 14px; background:linear-gradient(120deg,#1e3a8a,#7c3aed); color:#fff;
-           position:sticky; top:0; z-index:50; box-shadow:0 2px 12px rgba(0,0,0,.15); }
-  header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.2px; }
-  header .sub { opacity:.85; font-size:13.5px; }
+  header { padding:12px 46px 9px 22px; background:linear-gradient(120deg,#1e3a8a,#7c3aed); color:#fff;
+           position:sticky; top:0; z-index:50; box-shadow:0 2px 12px rgba(0,0,0,.15); transition:padding .18s; }
+  header h1 { margin:0 0 3px; font-size:18px; letter-spacing:.2px; }
+  header .sub { opacity:.85; font-size:12.5px; }
+  .min { position:absolute; top:9px; right:12px; width:28px; height:28px; border:0; border-radius:6px;
+         background:rgba(255,255,255,.22); color:#fff; cursor:pointer; font-size:12px; line-height:1;
+         transition:transform .18s; }
+  .min:hover { background:rgba(255,255,255,.35); }
+  header.collapsed { padding:7px 46px 7px 22px; }
+  header.collapsed h1 { font-size:14px; margin:0; }
+  header.collapsed .sub, header.collapsed .legend { display:none; }
+  header.collapsed .bar { margin-top:0; }
+  header.collapsed .min { transform:rotate(-90deg); }
   .bar { display:flex; align-items:center; gap:14px; margin-top:14px; flex-wrap:wrap; }
   .toggle { display:inline-flex; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.16);
             border:1px solid rgba(255,255,255,.35); font-weight:600; }
@@ -67,12 +76,13 @@
   .note b { color:var(--ink); }
   footer { text-align:center; color:var(--muted); font-size:11.5px; padding:0 16px 30px; }
   @media (max-width: 640px) {
-    header { padding:16px 16px 10px; }
-    header h1 { font-size:18px; }
-    header .sub { font-size:12.5px; }
-    .bar { gap:8px; margin-top:10px; }
+    header { padding:12px 44px 10px 14px; }
+    header h1 { font-size:16px; }
+    header .sub { font-size:12px; }
+    .bar { gap:8px; margin-top:9px; }
     .legend { font-size:11px; }
     .legend span { margin-right:7px; }
+    header.collapsed { padding:6px 44px 6px 14px; }
     main { margin:12px auto 24px; padding:0 10px; }
     .fam-head { padding:12px 12px; }
     .fam-head .name { font-size:14.5px; }
@@ -88,7 +98,8 @@
 </style>
 </head>
 <body>
-<header>
+<header id="tophead">
+  <button class="min" id="minbtn" aria-label="Collapse or expand header" title="Collapse / expand header">&#9660;</button>
   <h1>UNGDC — Solidarity Identity Typology</h1>
   <div class="sub">How states ascribe identity to themselves in UN General Assembly General-Debate speeches &middot; click a type to read verbatim quotes from the corpus</div>
   <div class="bar">
@@ -199,6 +210,7 @@ function openCode(fi,cid){
 }
 
 document.getElementById('mclose').onclick = ()=>document.getElementById('overlay').classList.remove('show');
+document.getElementById('minbtn').onclick = ()=>document.getElementById('tophead').classList.toggle('collapsed');
 document.getElementById('overlay').onclick = (e)=>{ if(e.target===document.getElementById('overlay')) e.target.classList.remove('show'); };
 document.getElementById('toggleyear').addEventListener('click',(e)=>{
   const btn = e.target.closest('button'); if(!btn) return;

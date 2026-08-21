@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solidarity Concept Analysis in the UNGDC - 1957</title>
+<title>Solidarity Concept Analysis — UNGDC 1957</title>
 <style>
+  :root { --bg:#f6f7fb; --card:#fff; --ink:#1a2233; --muted:#6b7280; --line:#e5e7eb;
+          --accent:#2563eb; --accent2:#7c3aed; }
   .topnav { position:sticky; top:0; z-index:60; background:#0f172a; color:#fff;
             display:flex; align-items:center; gap:18px; padding:11px 22px;
             font:600 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -13,26 +15,54 @@
   .topnav a { color:#cbd5e1; text-decoration:none; }
   .topnav a:hover { color:#fff; }
   .topnav a.on { color:#fff; border-bottom:2px solid #818cf8; padding-bottom:2px; }
-  body { font-family: -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-         max-width: 860px; margin: 0 auto; padding: 1.4rem; color:#1a1a1a; line-height:1.55; }
-  h1 { font-size: 1.6rem; margin-bottom:.2rem; }
-  h2 { font-size: 1.25rem; margin-top:1.8rem; border-bottom:2px solid #4C72B0; padding-bottom:.3rem; }
-  h3 { font-size:1.05rem; margin:.9rem 0 .3rem; }
-  .code { background:#4C72B0; color:#fff; border-radius:3px; padding:.05rem .45rem; font-size:.85em; }
-  .count { color:#888; font-weight:normal; }
-  table { border-collapse:collapse; margin:.8rem 0; font-size:.95rem; }
-  th,td { border:1px solid #ccc; padding:.3rem .7rem; text-align:left; }
-  th { background:#f0f4fa; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+         background:var(--bg); color:var(--ink); line-height:1.5; }
+  header { padding:22px 28px 16px; background:linear-gradient(120deg,#1e3a8a,#7c3aed); color:#fff;
+           position:sticky; top:44px; z-index:50; box-shadow:0 2px 12px rgba(0,0,0,.15); }
+  header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.2px; }
+  header .sub { opacity:.85; font-size:13.5px; }
+  main { max-width:1000px; margin:22px auto 40px; padding:0 20px; }
+  .note { font-size:12.5px; color:var(--muted); background:#fff; border:1px solid var(--line);
+          border-radius:10px; padding:14px 18px; margin:8px auto 20px; max-width:1000px; }
+  .note b { color:var(--ink); }
+  /* summary stat cards */
+  .stats { display:flex; flex-wrap:wrap; gap:12px; margin:0 0 22px; }
+  .stat { flex:1; min-width:150px; background:var(--card); border:1px solid var(--line);
+          border-radius:12px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .stat .big { font-size:26px; font-weight:700; color:var(--accent); }
+  .stat .lbl { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  /* mentions table card */
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:18px 20px; margin-bottom:22px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .card h2 { margin:0 0 12px; font-size:17px; }
+  table { border-collapse:collapse; width:100%; font-size:14px; }
+  th,td { border-bottom:1px solid var(--line); padding:7px 10px; text-align:left; }
+  th { color:var(--muted); font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.4px; }
+  tbody tr:hover { background:#f0f2fa; }
+  /* type sections styled like the typology families */
+  .type { --fc:#7c3aed; background:var(--card); border:1px solid var(--line); border-radius:12px;
+          margin-bottom:14px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .type .thead { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer;
+                 user-select:none; border-left:6px solid var(--fc); transition:background .12s; }
+  .type .thead:hover { background:#f0f2fa; }
+  .type .code { font-weight:700; font-size:14px; color:var(--fc); background:#eef1f7; border-radius:6px;
+                padding:2px 8px; }
+  .type .name { font-weight:600; font-size:16px; flex:1; }
+  .type .n { font-size:12.5px; color:var(--muted); background:#eef1f7; border-radius:999px; padding:3px 10px; }
+  .type .chev { color:var(--muted); transition:transform .18s; }
+  .type.open .thead .chev { transform:rotate(90deg); }
+  .body { display:none; padding:4px 18px 16px; }
+  .type.open .body { display:block; }
+  .rationale { font-size:13px; color:var(--muted); margin:6px 0 12px; }
+  /* mention cards */
+  .mention { background:#f8fafc; border-left:4px solid var(--fc); border-radius:0 8px 8px 0;
+             padding:10px 14px; margin:10px 0; }
+  .mention .who { font-size:11.5px; color:var(--muted); font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+                  font-weight:600; }
+  .mention .ctx { margin-top:6px; font-size:14px; color:#111827; }
   mark { background:#ffe08a; padding:0 .15rem; border-radius:2px; font-weight:600; }
-  .rationale { color:#444; font-size:.92rem; margin:.2rem 0 .5rem; }
-  details { margin:.4rem 0 .9rem; }
-  summary { cursor:pointer; font-weight:600; color:#2a4a7f; }
-  .mentions { margin:.5rem 0 0 1rem; }
-  .mention { margin:.7rem 0; padding:.5rem .8rem; background:#f7f9fc; border-left:3px solid #4C72B0;
-             border-radius:4px; }
-  .who { font-size:.8rem; color:#666; font-weight:600; }
-  .ctx { margin-top:.2rem; }
-  .meta { color:#666; font-size:.85rem; margin-top:2rem; }
+  footer { text-align:center; color:var(--muted); font-size:11.5px; padding:0 16px 30px; }
 </style>
 </head>
 <body>
@@ -43,128 +73,147 @@
   <a href="concept-1957.html" class="on">Concept Analysis</a>
 </nav>
 
-<h1>Solidarity Concept Analysis in the UNGDC - 1957</h1>
-<p class="meta">UN General Assembly General Debate, session 12 · 71 speeches · solidarity_concept_1957 study</p>
+<header>
+  <h1>Solidarity Concept Analysis — 1957</h1>
+  <div class="sub">The literal word “solidarity” in UN General Assembly General-Debate speeches &middot; click a type to read every mention in context</div>
+</header>
 
-<h2>Section 1 — Solidarity mentions</h2>
-<p><strong>22</strong> mentions of the word <mark>solidarity</mark> across <strong>16</strong>
-of 71 speeches.</p>
-<table>
-<tr><th>State</th><th>Mentions</th></tr>
-<tr><td>ESP</td><td>2</td></tr>
-<tr><td>FRA</td><td>2</td></tr>
-<tr><td>ITA</td><td>2</td></tr>
-<tr><td>LAO</td><td>2</td></tr>
-<tr><td>POL</td><td>2</td></tr>
-<tr><td>VEN</td><td>2</td></tr>
-<tr><td>ALB</td><td>1</td></tr>
-<tr><td>ARG</td><td>1</td></tr>
-<tr><td>DOM</td><td>1</td></tr>
-<tr><td>ECU</td><td>1</td></tr>
-<tr><td>IRN</td><td>1</td></tr>
-<tr><td>LBN</td><td>1</td></tr>
-<tr><td>PAN</td><td>1</td></tr>
-<tr><td>PRY</td><td>1</td></tr>
-<tr><td>SLV</td><td>1</td></tr>
-<tr><td>SYR</td><td>1</td></tr>
-</table>
+<div class="note">
+  <b>Reading this page.</b> It counts every occurrence of the word <em>solidarity</em> in the 1957 General Debate and sorts each mention into a candidate typology of <em>kinds</em> of solidarity. Each type shows its coding rationale (inclusion/exclusion), the mention count, and the verbatim quotes. A mention can only belong to one type (mutually exclusive at the mention level).
+</div>
 
-<h2>Section 2 — Candidate typology of <mark>solidarity</mark> mentions</h2>
-<p>Each type lists its rationale (inclusion/exclusion criteria), the number of mentions, and
-every mention shown in context. Click a type to expand its full mention list.</p>
+<main>
 
-<section class="type" id="F3">
-  <h3><span class="code">F3</span> Kinship-community solidarity <span class="count">(8)</span></h3>
-  <p class="rationale">Solidarity as the natural bond of an identity-community — Arab 'one people', socialist fraternity, inter-American family, civilizational/regional kinship, 'family of nations'. INCLUDE: shared identity/kinship of the speaker's own community. EXCLUDE: sympathy for an *other* oppressed people (F4).</p>
-  <details>
-    <summary>Show 8 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>DOM · DOM_12_1957</span><div class='ctx'>If, as Emerson said, an institution is the lengthened shadow of one man, then the national renaissance which the Dominican people are now enjoying reflects the convictions of one man, Generalissimo Trujillo, who throughout the unyielding struggle of a quarter of a century has guided the convolutions of our turbulent history into the straight and shining path of peace and labour and has given our Government a sound national policy, which is, of course, a sure guarantee of the policy we follow in the United Nations.
+  <div class="stats">
+    <div class="stat"><div class="big">22</div><div class="lbl">mentions of “solidarity”</div></div>
+    <div class="stat"><div class="big">16</div><div class="lbl">of 71 speeches</div></div>
+    <div class="stat"><div class="big">7</div><div class="lbl">candidate types (F1–F7)</div></div>
+  </div>
+
+  <div class="card">
+    <h2>By state</h2>
+    <table>
+      <thead><tr><th>State</th><th>Mentions</th></tr></thead>
+      <tbody>
+        <tr><td>ESP</td><td>2</td></tr>
+        <tr><td>FRA</td><td>2</td></tr>
+        <tr><td>ITA</td><td>2</td></tr>
+        <tr><td>LAO</td><td>2</td></tr>
+        <tr><td>POL</td><td>2</td></tr>
+        <tr><td>VEN</td><td>2</td></tr>
+        <tr><td>ALB</td><td>1</td></tr>
+        <tr><td>ARG</td><td>1</td></tr>
+        <tr><td>DOM</td><td>1</td></tr>
+        <tr><td>ECU</td><td>1</td></tr>
+        <tr><td>IRN</td><td>1</td></tr>
+        <tr><td>LBN</td><td>1</td></tr>
+        <tr><td>PAN</td><td>1</td></tr>
+        <tr><td>PRY</td><td>1</td></tr>
+        <tr><td>SLV</td><td>1</td></tr>
+        <tr><td>SYR</td><td>1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="type" id="F3">
+    <div class="thead"><span class="code">F3</span><span class="name">Kinship-community solidarity</span><span class="n">8</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity as the natural bond of an identity-community — Arab 'one people', socialist fraternity, inter-American family, civilizational/regional kinship, 'family of nations'. INCLUDE: shared identity/kinship of the speaker's own community. EXCLUDE: sympathy for an <em>other</em> oppressed people (F4).</p>
+      <div class="mention"><div class="who">DOM · DOM_12_1957</div><div class="ctx">If, as Emerson said, an institution is the lengthened shadow of one man, then the national renaissance which the Dominican people are now enjoying reflects the convictions of one man, Generalissimo Trujillo, who throughout the unyielding struggle of a quarter of a century has guided the convolutions of our turbulent history into the straight and shining path of peace and labour and has given our Government a sound national policy, which is, of course, a sure guarantee of the policy we follow in the United Nations.
 20.	As a member of the family of American nations our policy in the United Nations is guided by the principles of inter-American <mark>solidarity</mark>, which are the paramount expression of our international political loyalties. My Government is fully conscious that the unity of the system of American States must be maintained intact in the face of the dividing forces which conspire against it, for it is this unify that gives the inter-American system its force in the world</div></div>
-<div class='mention'><span class='who'>ECU · ECU_12_1957</span><div class='ctx'>As a member of the Organization of American States, Ecuador considers it impossible to settle any economic or financial problem satisfactorily without reference to the other members of this family of States, since they are intimately linked not only by geography but by a long-standing tradition of <mark>solidarity</mark> in matters of labour production, the mobilization of resources, the fixing of prices for products, the regulation of markets and lastly, the co-ordination of the many and varied factors in their economies</div></div>
-<div class='mention'><span class='who'>ESP · ESP_12_1957</span><div class='ctx'>We Spaniards are linked to lands and peoples of the Near East by ties which have been sanctified by centuries of history and are growing stronger day by day. Between that world and the coasts of Spain there lies a common sea; and that sea suggests and even dictates principles and feelings of strong <mark>solidarity</mark>.
+      <div class="mention"><div class="who">ECU · ECU_12_1957</div><div class="ctx">As a member of the Organization of American States, Ecuador considers it impossible to settle any economic or financial problem satisfactorily without reference to the other members of this family of States, since they are intimately linked not only by geography but by a long-standing tradition of <mark>solidarity</mark> in matters of labour production, the mobilization of resources, the fixing of prices for products, the regulation of markets and lastly, the co-ordination of the many and varied factors in their economies</div></div>
+      <div class="mention"><div class="who">ESP · ESP_12_1957</div><div class="ctx">We Spaniards are linked to lands and peoples of the Near East by ties which have been sanctified by centuries of history and are growing stronger day by day. Between that world and the coasts of Spain there lies a common sea; and that sea suggests and even dictates principles and feelings of strong <mark>solidarity</mark>.
 32.	We cannot but listen gladly to certain illustrious voices from the Moslem world which are suggesting a Mediterranean confederation or community towards whose realization there would advance, pari passu, from one side the peoples of southern and southwestern Europe, or, to put it more precisely, the European peoples with a Mediterranean sea-board, and from the other side the nations of North Africa, which from the remotest periods of classical antiquity have co-operated fruitfully — as the names of Carthage, Tunis, Tripoli, Oran and Fez bear witness — in the creation and development of a well-defined culture</div></div>
-<div class='mention'><span class='who'>ESP · ESP_12_1957</span><div class='ctx'>There are, however, certain weak spots and defects in its agricultural and industrial development, which my Government is taking energetic steps to remedy in order to bring about a general improvement. A great deal of progress has been made along these lines, and Spain is developing a sense of <mark>solidarity</mark> concerning the country’s interests, as a result of which sacrifice is evenly distributed and those who are well off are asked to co-operate in efforts to improve the lot of the others</div></div>
-<div class='mention'><span class='who'>LBN · LBN_12_1957</span><div class='ctx'>It is difficult to imagine peace and stability in the Near East without the deepest understanding and the truest co-operation between Lebanon and Syria.
+      <div class="mention"><div class="who">ESP · ESP_12_1957</div><div class="ctx">There are, however, certain weak spots and defects in its agricultural and industrial development, which my Government is taking energetic steps to remedy in order to bring about a general improvement. A great deal of progress has been made along these lines, and Spain is developing a sense of <mark>solidarity</mark> concerning the country’s interests, as a result of which sacrifice is evenly distributed and those who are well off are asked to co-operate in efforts to improve the lot of the others</div></div>
+      <div class="mention"><div class="who">LBN · LBN_12_1957</div><div class="ctx">It is difficult to imagine peace and stability in the Near East without the deepest understanding and the truest co-operation between Lebanon and Syria.
 42.	While pursuing an independent policy of its own, Lebanon feels the deepest sense of <mark>solidarity</mark> with Syria and will do everything in its power to prevent any harm from being done to it. Lebanon and Syria being bound by the charter of the League of Arab States and by the Arab joint defence pact, Lebanon will always instantly come to the support of Syria if it is attacked</div></div>
-<div class='mention'><span class='who'>POL · POL_12_1957</span><div class='ctx'>Poland is a socialist State; and it is only because we have embarked on the path of socialism that we have been able to resolve the contradictions which held back economic, social and cultural progress in our country; only because we have taken that path have we been able to overcome the effects of the state of backwardness we inherited from the past, and to bring about the advancement of Poland in all fields. We also believe that, as a socialist State, Poland can be a positive factor in the growth of peaceful relations among nations. Strong and lasting bonds of <mark>solidarity</mark> link us with the other socialist countries, bonds forged by common needs, by the common basic problems of socialist development and by the vital interests of the Polish people.
+      <div class="mention"><div class="who">POL · POL_12_1957</div><div class="ctx">Poland is a socialist State; and it is only because we have embarked on the path of socialism that we have been able to resolve the contradictions which held back economic, social and cultural progress in our country; only because we have taken that path have we been able to overcome the effects of the state of backwardness we inherited from the past, and to bring about the advancement of Poland in all fields. We also believe that, as a socialist State, Poland can be a positive factor in the growth of peaceful relations among nations. Strong and lasting bonds of <mark>solidarity</mark> link us with the other socialist countries, bonds forged by common needs, by the common basic problems of socialist development and the vital interests of the Polish people.
 122</div></div>
-<div class='mention'><span class='who'>POL · POL_12_1957</span><div class='ctx'>We are therefore gratified to note the recent improvement in our relations with many Western countries, as well as the continued strengthening of our friendly cooperation with many countries of Asia and Africa. There is no, and there cannot be, any contradiction between our ties and our <mark>solidarity</mark> with socialist countries and the improvement and expansion of our relations with other countries. It is essential for the favourable development of our mutual friendly relations that the countries in question realize this</div></div>
-<div class='mention'><span class='who'>SYR · SYR_12_1957</span><div class='ctx'>Nevertheless, the Arab States have made definite progress in the right direction by establishing the Arab League and by concluding a number of reciprocal economic, cultural, security and other agreements.
-28.	One fact is already established and open to no doubt: the <mark>solidarity</mark> existing between the Arabs is such that it cannot be broken by foreign efforts like those recently undertaken with a view to isolating Syria. This fact is amply confirmed by the official statements which have been made lately by a number of Arab Governments</div></div></div>
-  </details>
-</section>
+      <div class="mention"><div class="who">POL · POL_12_1957</div><div class="ctx">We are therefore gratified to note the recent improvement in our relations with many Western countries, as well as the continued strengthening of our friendly cooperation with many countries of Asia and Africa. There is no, and there cannot be, any contradiction between our ties and our <mark>solidarity</mark> with socialist countries and the improvement and expansion of our relations with other countries. It is essential for the favourable development of our mutual friendly relations that the countries in question realize this</div></div>
+      <div class="mention"><div class="who">SYR · SYR_12_1957</div><div class="ctx">Nevertheless, the Arab States have made definite progress in the right direction by establishing the Arab League and by concluding a number of reciprocal economic, cultural, security and other agreements.
+28.	One fact is already established and open to no doubt: the <mark>solidarity</mark> existing between the Arabs is such that it cannot be broken by foreign efforts like those recently undertaken with a view to isolating Syria. This fact is amply confirmed by the official statements which have been made lately by a number of Arab Governments</div></div>
+    </div>
+  </section>
 
-<section class="type" id="F1">
-  <h3><span class="code">F1</span> Institutional collective security <span class="count">(4)</span></h3>
-  <p class="rationale">Solidarity invoked as the UN, Charter, or collective-security machinery — a universal or aspirational institutional order. INCLUDE: UN/Charter/SC, disarmament, regional collective-security systems, 'international solidarity' tied to an institution. EXCLUDE: a named defensive pact against a specific adversary (F2).</p>
-  <details>
-    <summary>Show 4 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>ARG · ARG_12_1957</span><div class='ctx'>Economic and social agreements are more feasible than political or military agreements. In both those fields, the United Nations has achieved positive results which demonstrate international <mark>solidarity</mark>.
+  <section class="type" id="F1">
+    <div class="thead"><span class="code">F1</span><span class="name">Institutional collective security</span><span class="n">4</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity invoked as the UN, Charter, or collective-security machinery — a universal or aspirational institutional order. INCLUDE: UN/Charter/SC, disarmament, regional collective-security systems, 'international solidarity' tied to an institution. EXCLUDE: a named defensive pact against a specific adversary (F2).</p>
+      <div class="mention"><div class="who">ARG · ARG_12_1957</div><div class="ctx">Economic and social agreements are more feasible than political or military agreements. In both those fields, the United Nations has achieved positive results which demonstrate international <mark>solidarity</mark>.
 19.	Among the plans recommended to this Assembly, one of the most important is that proposing the establishment of a Special United Nations Fund for Economic Development (SUNFED)</div></div>
-<div class='mention'><span class='who'>IRN · IRN_12_1957</span><div class='ctx'>It is in this spirit that we shall take part in the work of this session, with the firm conviction that the health and prosperity of our people, as of all others, can be assured only within that framework of international <mark>solidarity</mark> of which the United Nations is the living symbol.</div></div>
-<div class='mention'><span class='who'>ITA · ITA_12_1957</span><div class='ctx'>Our work in Somaliland, for example, has attracted attention and has been commended by the United Nations. We have been gratified by its endorsement of our policy and its appreciation of the scope of our efforts. The sacrifices which we have made in the interests of human <mark>solidarity</mark>, which is or should be the guiding principle of the United Nations, will, I am certain, bear fruit. The United Nations has helped us in the fulfilment of this task; in this connexion, I should like to thank all those whose co-operation has made this possible</div></div>
-<div class='mention'><span class='who'>PAN · PAN_12_1957</span><div class='ctx'>In the Security Council, Panama will strive to ensure respect for fundamental human rights; it will work for a valid system of safeguarding human rights so that man’s basic achievements are not left open to attack by the enemies of peace; and so that the ideals of universal harmony shall not remain mere empty words but become firm guaranties of <mark>solidarity</mark> and co-operation.
-11.	The concept of justice is not limited to specific circumstances or applicable only at certain times; it is of universal validity. That is why, in the Security Council, Panama will speak up in defence of the inalterable principles of equity and will vigorously oppose those who seek to reduce man to a mere cipher</div></div></div>
-  </details>
-</section>
+      <div class="mention"><div class="who">IRN · IRN_12_1957</div><div class="ctx">It is in this spirit that we shall take part in the work of this session, with the firm conviction that the health and prosperity of our people, as of all others, can be assured only within that framework of international <mark>solidarity</mark> of which the United Nations is the living symbol.</div></div>
+      <div class="mention"><div class="who">ITA · ITA_12_1957</div><div class="ctx">Our work in Somaliland, for example, has attracted attention and has been commended by the United Nations. We have been gratified by its endorsement of our policy and its appreciation of the scope of our efforts. The sacrifices which we have made in the interests of human <mark>solidarity</mark>, which is or should be the guiding principle of the United Nations, will, I am certain, bear fruit. The United Nations has helped us in the fulfilment of this task; in this connexion, I should like to thank all those whose co-operation has made this possible</div></div>
+      <div class="mention"><div class="who">PAN · PAN_12_1957</div><div class="ctx">In the Security Council, Panama will strive to ensure respect for fundamental human rights; it will work for a valid system of safeguarding human rights so that man’s basic achievements are not left open to attack by the enemies of peace; and so that the ideals of universal harmony shall not remain mere empty words but become firm guaranties of <mark>solidarity</mark> and co-operation.
+11.	The concept of justice is not limited to specific circumstances or applicable only at certain times; it is of universal validity. That is why, in the Security Council, Panama will speak up in defence of the inalterable principles of equity and will vigorously oppose those who seek to reduce man to a mere cipher</div></div>
+    </div>
+  </section>
 
-<section class="type" id="F5">
-  <h3><span class="code">F5</span> Development-aid solidarity <span class="count">(4)</span></h3>
-  <p class="rationale">Solidarity operationalized as concrete material/economic help, donor→recipient. INCLUDE: aid, technology, infrastructure, economic cooperation, gratitude. EXCLUDE: empathy without transfer (F4).</p>
-  <details>
-    <summary>Show 4 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>FRA · FRA_12_1957</span><div class='ctx'>I cannot help expressing my uneasiness, in the light of the expansionist outlook of certain totalitarian countries, at the way in which the export of arms to that region of the world is increasing with every month that passes, when what those countries really need is the means of raising their standards of living and developing their economies within the framework of a general movement for international <mark>solidarity</mark>.
+  <section class="type" id="F5">
+    <div class="thead"><span class="code">F5</span><span class="name">Development-aid solidarity</span><span class="n">4</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity operationalized as concrete material/economic help, donor→recipient. INCLUDE: aid, technology, infrastructure, economic cooperation, gratitude. EXCLUDE: empathy without transfer (F4).</p>
+      <div class="mention"><div class="who">FRA · FRA_12_1957</div><div class="ctx">I cannot help expressing my uneasiness, in the light of the expansionist outlook of certain totalitarian countries, at the way in which the export of arms to that region of the world is increasing with every month that passes, when what those countries really need is the means of raising their standards of living and developing their economies within the framework of a general movement for international <mark>solidarity</mark>.
 110. Here we see how greatly the United Nations is hampered for want of a solution to a number of world problems and by continued rivalries or misunderstandings among nations.
 111</div></div>
-<div class='mention'><span class='who'>LAO · LAO_12_1957</span><div class='ctx'>But we discuss all these problems openly and freely with the donor States and we are grateful to them for their unvarying spirit of friendly co-operation. Nor shall we forget the material sacrifices which this assistance requires on the part of the States which, in a magnificent gesture of international <mark>solidarity</mark>, are bringing to us the benefit of their experience, technology and friendship.
+      <div class="mention"><div class="who">LAO · LAO_12_1957</div><div class="ctx">But we discuss all these problems openly and freely with the donor States and we are grateful to them for their unvarying spirit of friendly co-operation. Nor shall we forget the material sacrifices which this assistance requires on the part of the States which, in a magnificent gesture of international <mark>solidarity</mark>, are bringing to us the benefit of their experience, technology and friendship.
 32.	We have pleasure in paying this tribute to the generosity of this economic assistance because it has been administered so far in a broad spirit of understanding, with full respect for our independence</div></div>
-<div class='mention'><span class='who'>PRY · PRY_12_1957</span><div class='ctx'>In this connexion, I should like publicly to acknowledge before the representatives of the nations of the world in this Assembly the invaluable and disinterested co-operation which the Government of Brazil has afforded us by financing international roads which will give us access to the sea, by providing us with free port facilities on the Atlantic Ocean, and by building - as it is now doing - a great international bridge over the Parana which will link the Brazilian and Paraguayan highway systems, thus making available to us the benefits of Brazil's seacoast, as extensive as is its sense of international <mark>solidarity</mark>. In addition, the Brazilian Government has undertaken technical and financial responsibility for the construction of hydroelectric stations.
+      <div class="mention"><div class="who">PRY · PRY_12_1957</div><div class="ctx">In this connexion, I should like publicly to acknowledge before the representatives of the nations of the world in this Assembly the invaluable and disinterested co-operation which the Government of Brazil has afforded us by financing international roads which will give us access to the sea, by providing us with free port facilities on the Atlantic Ocean, and by building - as it is now doing - a great international bridge over the Parana which will link the Brazilian and Paraguayan highway systems, thus making available to us the benefits of Brazil's seacoast, as extensive as is its sense of international <mark>solidarity</mark>. In addition, the Brazilian Government has undertaken technical and financial responsibility for the construction of hydroelectric stations.
 12.	Paraguay's problems as a land-locked country require further measures for their solution and we intend in due course to lay before the appropriate bodies of the United Nations two proposals to which we attach essential importance: substantial assistance in the development of the Paraguayan merchant fleet, and the development of the potentialities which Paraguay, thanks to its position at the heart of the continent, possesses as South America’s natural air base and centre</div></div>
-<div class='mention'><span class='who'>VEN · VEN_12_1957</span><div class='ctx'>Its most noble task would be to determine how the prosperous States may satisfy the most pressing needs of other States in those fields where timely assistance may be decisive for their development.
-120.	Believing that this is undoubtedly the best way of giving practical expression to the term "international <mark>solidarity</mark>", General Marcos Pérez Jiménez, President of Venezuela, proposed to the American nations represented at Panama by their Heads of State, the establishment of an economic fund made up of contributions from all the members of the regional organization and designed to solve the most pressing problems of the American continent</div></div></div>
-  </details>
-</section>
+      <div class="mention"><div class="who">VEN · VEN_12_1957</div><div class="ctx">Its most noble task would be to determine how the prosperous States may satisfy the most pressing needs of other States in those fields where timely assistance may be decisive for their development.
+120.	Believing that this is undoubtedly the best way of giving practical expression to the term "international <mark>solidarity</mark>", General Marcos Pérez Jiménez, President of Venezuela, proposed to the American nations represented at Panama by their Heads of State, the establishment of an economic fund made up of contributions from all the members of the regional organization and designed to solve the most pressing problems of the American continent</div></div>
+    </div>
+  </section>
 
-<section class="type" id="F6">
-  <h3><span class="code">F6</span> Universal solidarity <span class="count">(2)</span></h3>
-  <p class="rationale">Solidarity as an abstract, non-exclusionary human ideal or common destiny. INCLUDE: 'human solidarity', coexistence, forced common destiny (nuclear). EXCLUDE: institutional anchor (F1).</p>
-  <details>
-    <summary>Show 2 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>LAO · LAO_12_1957</span><div class='ctx'>In other words, coexistence can be conceived only within the framework of Independence and non-intervention. One ill-considered act of intervention is sufficient to bring to nothing years of effort, <mark>solidarity</mark>, mutual aid and understanding.
+  <section class="type" id="F6">
+    <div class="thead"><span class="code">F6</span><span class="name">Universal solidarity</span><span class="n">2</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity as an abstract, non-exclusionary human ideal or common destiny. INCLUDE: 'human solidarity', coexistence, forced common destiny (nuclear). EXCLUDE: institutional anchor (F1).</p>
+      <div class="mention"><div class="who">LAO · LAO_12_1957</div><div class="ctx">In other words, coexistence can be conceived only within the framework of Independence and non-intervention. One ill-considered act of intervention is sufficient to bring to nothing years of effort, <mark>solidarity</mark>, mutual aid and understanding.
 30.	I should like at this juncture to express our gratitude for the generous material assistance furnished to us by the United States, France, the United Nations and the Colombo Plan countries</div></div>
-<div class='mention'><span class='who'>VEN · VEN_12_1957</span><div class='ctx'>The considerable progress made by international co-operation in recent years has profoundly changed the traditional mode of diplomacy, once the reflection of the isolation in which, until a short time ago, States lived. Modern diplomacy is inspired by a new concept of human <mark>solidarity</mark>; it is based on that interchange of ideas, opinions, goods and, in short, all the benefits of civilization, which is the most beneficial result of the improvement and growth of communications</div></div></div>
-  </details>
-</section>
+      <div class="mention"><div class="who">VEN · VEN_12_1957</div><div class="ctx">The considerable progress made by international co-operation in recent years has profoundly changed the traditional mode of diplomacy, once the reflection of the isolation in which, until a short time ago, States lived. Modern diplomacy is inspired by a new concept of human <mark>solidarity</mark>; it is based on that interchange of ideas, opinions, goods and, in short, all the benefits of civilization, which is the most beneficial result of the improvement and growth of communications</div></div>
+    </div>
+  </section>
 
-<section class="type" id="F7">
-  <h3><span class="code">F7</span> Normative solidarity <span class="count">(2)</span></h3>
-  <p class="rationale">Solidarity used as a criterion of 'true' vs artificial solidarity, or a self-ascribed trait. INCLUDE: judging legitimacy, self-naming a solidarity spirit. EXCLUDE: a directed claim to a recipient/institution (F1–F6).</p>
-  <details>
-    <summary>Show 2 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>FRA · FRA_12_1957</span><div class='ctx'>Its authority will always be questioned if some people, by their attitude, always make it subject to question.
+  <section class="type" id="F7">
+    <div class="thead"><span class="code">F7</span><span class="name">Normative solidarity</span><span class="n">2</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity used as a criterion of 'true' vs artificial solidarity, or a self-ascribed trait. INCLUDE: judging legitimacy, self-naming a solidarity spirit. EXCLUDE: a directed claim to a recipient/institution (F1–F6).</p>
+      <div class="mention"><div class="who">FRA · FRA_12_1957</div><div class="ctx">Its authority will always be questioned if some people, by their attitude, always make it subject to question.
 151.	A second weakness of our Organization is the way in which groups are formed within it that are justified neither by geography nor true <mark>solidarity</mark>, and whose sole purpose is thus by definition to take the negative view. Far be it from me to suggest that membership of the United Nations excludes a country from belonging to regional organizations for the defence of a common ideal or common interest</div></div>
-<div class='mention'><span class='who'>SLV · SLV_12_1957</span><div class='ctx'>El Salvador, one of the founder Members of this Organization and also a founder member of important regional bodies such as the Organization of American States and the Organization of Central American States, has at all times distinguished itself by its spirit of <mark>solidarity</mark> and by its support of the great moral and legal principles on which the coexistence of nations is based — the principles of the juridical equality of States, the right of peoples to self-determination and the principle of non-intervention by one State in the affairs of another</div></div></div>
-  </details>
-</section>
+      <div class="mention"><div class="who">SLV · SLV_12_1957</div><div class="ctx">El Salvador, one of the founder Members of this Organization and also a founder member of important regional bodies such as the Organization of American States and the Organization of Central American States, has at all times distinguished itself by its spirit of <mark>solidarity</mark> and by its support of the great moral and legal principles on which the coexistence of nations is based — the principles of the juridical equality of States, the right of peoples to self-determination and the principle of non-intervention by one State in the affairs of another</div></div>
+    </div>
+  </section>
 
-<section class="type" id="F2">
-  <h3><span class="code">F2</span> Defensive-alliance solidarity <span class="count">(1)</span></h3>
-  <p class="rationale">Solidarity claimed as the bond of a bounded defensive alliance against a named threat — NATO, Baghdad Pact, Warsaw Treaty, 'Atlantic solidarity'. INCLUDE: named pact + named adversary. EXCLUDE: a purely aspirational universal system (F1).</p>
-  <details>
-    <summary>Show 1 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>ITA · ITA_12_1957</span><div class='ctx'>Italy, a country which is deeply imbued with Latin civilization, has strong and sincere links of interest and sympathy with that part of the American continent where Latin civilization is flourishing under new but characteristically Latin forms. It has found its security in Atlantic <mark>solidarity</mark> and it remains strongly attached to the North Atlantic alliance, which binds the free world together and is essential to the maintenance of peace and the safeguarding of our liberties</div></div></div>
-  </details>
-</section>
+  <section class="type" id="F2">
+    <div class="thead"><span class="code">F2</span><span class="name">Defensive-alliance solidarity</span><span class="n">1</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity claimed as the bond of a bounded defensive alliance against a named threat — NATO, Baghdad Pact, Warsaw Treaty, 'Atlantic solidarity'. INCLUDE: named pact + named adversary. EXCLUDE: a purely aspirational universal system (F1).</p>
+      <div class="mention"><div class="who">ITA · ITA_12_1957</div><div class="ctx">Italy, a country which is deeply imbued with Latin civilization, has strong and sincere links of interest and sympathy with that part of the American continent where Latin civilization is flourishing under new but characteristically Latin forms. It has found its security in Atlantic <mark>solidarity</mark> and it remains strongly attached to the North Atlantic alliance, which binds the free world together and is essential to the maintenance of peace and the safeguarding ofour liberties</div></div>
+    </div>
+  </section>
 
-<section class="type" id="F4">
-  <h3><span class="code">F4</span> Empathetic solidarity <span class="count">(1)</span></h3>
-  <p class="rationale">Solidarity as sympathy/moral identification with an oppressed or colonized other, across distance. INCLUDE: relational empathy, no institutional/material content. EXCLUDE: shared-identity kinship (F3); concrete aid (F5).</p>
-  <details>
-    <summary>Show 1 mention(s) in context</summary>
-    <div class="mentions"><div class='mention'><span class='who'>ALB · ALB_12_1957</span><div class='ctx'>The Syrian people and their Government have frustrated, and will always frustrate, the threats and provocations of the imperialists. Their just cause has won the sympathy of all peace-loving countries. The Albanian people express their <mark>solidarity</mark> with the people of Syria and condemn the aggressive policies of the United States towards the Syrian Republic. The Albanian people feel close to the Arab peoples, whom they regard as brothers</div></div></div>
-  </details>
-</section>
+  <section class="type" id="F4">
+    <div class="thead"><span class="code">F4</span><span class="name">Empathetic solidarity</span><span class="n">1</span><span class="chev">▶</span></div>
+    <div class="body">
+      <p class="rationale">Solidarity as sympathy/moral identification with an oppressed or colonized other, across distance. INCLUDE: relational empathy, no institutional/material content. EXCLUDE: shared-identity kinship (F3); concrete aid (F5).</p>
+      <div class="mention"><div class="who">ALB · ALB_12_1957</div><div class="ctx">The Syrian people and their Government have frustrated, and will always frustrate, the threats and provocations of the imperialists. Their just cause has won the sympathy of all peace-loving countries. The Albanian people express their <mark>solidarity</mark> with the people of Syria and condemn the aggressive policies of the United States towards the Syrian Republic. The Albanian people feel close to the Arab peoples, whom they regard as brothers</div></div>
+    </div>
+  </section>
 
-<p class="meta">Generated from <code>solidarity_concept_1957</code> study (2026-08-14). Source: <a href="https://github.com/patterson-s/ungdc">patterson-s/ungdc</a>.</p>
+  <p class="note" style="max-width:1000px;margin:18px auto 0;">
+    Generated from <code>solidarity_concept_1957</code> study (2026-08-14). Source: <a href="https://github.com/patterson-s/ungdc" style="color:var(--accent)">patterson-s/ungdc</a>.
+  </p>
+
+</main>
+
+<footer>UNGDC solidarity study &middot; concept analysis &middot; generated from coded corpus records.</footer>
+
+<script>
+  document.querySelectorAll('.type .thead').forEach(function(h){
+    h.addEventListener('click', function(){
+      h.parentElement.classList.toggle('open');
+    });
+  });
+</script>
 </body>
 </html>

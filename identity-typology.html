@@ -70,38 +70,53 @@
   .concept-sec h2 { font-size:19px; margin:0 0 4px; color:#1e3a8a; }
   .concept-sub { font-size:13px; color:var(--muted); margin:0 0 12px; }
   .concept-links { display:flex; flex-wrap:wrap; gap:12px; }
-  .concept-card { display:block; text-decoration:none; color:inherit; background:var(--card);
-                  border:1px solid var(--line); border-left:6px solid #7c3aed; border-radius:10px;
-                  padding:12px 16px; min-width:200px; box-shadow:0 1px 3px rgba(0,0,0,.05); transition:background .12s; }
-  .concept-card:hover { background:#f3f0fc; }
-  .concept-card .yr { font-weight:700; font-size:15px; color:#7c3aed; }
-  .concept-card .ttl { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .tabs { display:flex; gap:0; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+          border-radius:999px; overflow:hidden; margin-top:14px; width:fit-content; font-weight:600; }
+  .tabs .tab { border:0; background:transparent; color:#fff; padding:8px 22px; cursor:pointer;
+               font-size:14px; font-family:inherit; transition:background .15s; }
+  .tabs .tab.on { background:#fff; color:#1e3a8a; }
+  .panel { max-width:1000px; margin:22px auto 40px; padding:0 20px; }
+  #conceptframe { width:100%; min-height:1500px; border:1px solid var(--line); border-radius:12px;
+                  background:#fff; margin-top:6px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>UNGDC — Solidarity Identity Typology</h1>
-  <div class="sub">How states ascribe identity to themselves in UN General Assembly General-Debate speeches &middot; click a type to read verbatim quotes from the corpus</div>
+  <h1>UNGDC — Solidarity Study</h1>
+  <div class="sub">How states ascribe identity to themselves, and the solidarity lexicon they use, in UN General Assembly General-Debate speeches</div>
+  <div class="tabs">
+    <button class="tab on" id="tab-identity" onclick="showTab('identity')">Solidarity Identity Typology</button>
+    <button class="tab" id="tab-concept" onclick="showTab('concept')">Concept Analysis</button>
+  </div>
+</header>
+
+<div class="panel" id="panel-identity">
+  <div class="note">
+    <b>Reading the tree.</b> Each quote is one coded identity claim, assigned to <em>exactly one</em> fine code
+    (the coding is mutually exclusive at the claim level, with boundary rules resolving borderline cases). But
+    identities are <em>complementary</em> across a speech: the same country recurs under many codes, forming a
+    portfolio. The count on each code is the number of coded claims in that year. A code with
+    <span style="background:#fef3c7;color:#b45309;border-radius:999px;padding:0 6px">no quotes</span> is part of
+    the codebook but has no qualifying claim in that year's records.
+  </div>
   <div class="bar">
     <div class="toggle" id="toggleyear"><button data-year="1957" class="on">1957</button><button data-year="1965" class="">1965</button><button data-year="1975" class="">1975</button><button data-year="1985" class="">1985</button><button data-year="1995" class="">1995</button><button data-year="2005" class="">2005</button></div>
     <div class="legend" id="legend"></div>
   </div>
-</header>
-<div class="note">
-  <b>Reading the tree.</b> Each quote is one coded identity claim, assigned to <em>exactly one</em> fine code
-  (the coding is mutually exclusive at the claim level, with boundary rules resolving borderline cases). But
-  identities are <em>complementary</em> across a speech: the same country recurs under many codes, forming a
-  portfolio. The count on each code is the number of coded claims in that year. A code with
-  <span style="background:#fef3c7;color:#b45309;border-radius:999px;padding:0 6px">no quotes</span> is part of
-  the codebook but has no qualifying claim in that year's records.
+  <main id="tree"></main>
 </div>
-<main id="tree"></main>
 
-<section class="concept-sec">
-  <h2>Concept Analysis</h2>
-  <p class="concept-sub">A separate, term/passage-first reading of the solidarity lexicon (Layer A literal words + Layer B semantic neighbours), distinct from the self-ascription-of-identity typology above.</p>
-  <div class="concept-links" id="conceptlinks"><a class="concept-card" href="concept-1957.html"><div class="yr">1957</div><div class="ttl">Solidarity Concept Analysis</div></a></div>
-</section>
+<div class="panel" id="panel-concept" style="display:none">
+  <div class="note">
+    A separate, term/passage-first reading of the solidarity lexicon (Layer A literal words + Layer B semantic
+    neighbours), distinct from the self-ascription-of-identity typology. Pick a year to load that year's concept
+    report.
+  </div>
+  <div class="bar">
+    <div class="toggle" id="toggleconcept"><button data-year="1957" class="on" onclick="setConceptYear('1957')">1957</button></div>
+  </div>
+  <iframe id="conceptframe" src="concept-1957.html" title="Solidarity concept analysis report"></iframe>
+</div>
 
 <footer>UNGDC solidarity study &middot; self-ascription of identity &middot; generated from coded corpus records.</footer>
 
@@ -164,7 +179,21 @@ function renderTree(){
   renderLegend();
 }
 
-function toggleFam(head){ head.closest('.family').classList.toggle('open'); }
+function showTab(which){
+  const idTab = which === 'identity';
+  document.getElementById('panel-identity').style.display = idTab ? '' : 'none';
+  document.getElementById('panel-concept').style.display = idTab ? 'none' : '';
+  document.getElementById('tab-identity').classList.toggle('on', idTab);
+  document.getElementById('tab-concept').classList.toggle('on', !idTab);
+  if(!idTab){ try{ document.getElementById('conceptframe').contentWindow.scrollTo(0,0); }catch(e){} }
+}
+
+function setConceptYear(y){
+  const frame = document.getElementById('conceptframe');
+  if(frame) frame.src = 'concept-' + y + '.html';
+  document.querySelectorAll('#toggleconcept button').forEach(b=>b.classList.toggle('on', b.dataset.year===y));
+}
+
 
 function openCode(fi,cid){
   const f = DATA[YEAR.current][fi];
